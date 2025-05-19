@@ -67,7 +67,7 @@
  Worker
 Свойства:
  •  id, name, type, salary, capacity.
-•  Методы:
+Методы:
  •  performDuties: Выполняет задачи в зависимости от типа (чистка, лечение, кормление и т.д.).
  •  cleanEnclosures: Чистит вольеры.
  •  treatAnimals: Лечит больных животных.

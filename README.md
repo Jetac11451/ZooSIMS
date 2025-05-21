@@ -66,9 +66,6 @@
             if (hasDisease) message += L"болен! ";
             message += L"Счастье: " + to_wstring(oldHappiness) + L"% -> " + to_wstring(trueHappiness) + L"%";
             wcout << message << endl;
-        }
-    }
-
      //Проверяет, может ли животное сбежать из-за низкого счастья
      //Вероятность побега увеличивается при снижении счастья
 

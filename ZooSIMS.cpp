@@ -17,11 +17,14 @@
 
 using namespace std;
 
+// Классы для представления объектов зоопарка
 
 class Zoo;
 class Animal;
 class Enclosure;
 class Worker;
+
+// Перечисления для статусов здоровья животных, их типов, типов вольеров и работников
 
 enum class AnimalHealth { HEALTHY, SICK, DEAD };
 enum class AnimalType { LAND, AQUATIC, BIRD, REPTILE };
@@ -35,6 +38,8 @@ enum WorkerType {
     WORKER_VET, WORKER_CLEANER, WORKER_FEEDER, WORKER_TRAINER, WORKER_GUIDE
 };
 
+// Константные данные для игры
+
 const vector<wstring> healthStatus = { L"Здоров", L"Болен", L"Мертв" };
 const vector<wstring> animalTypes = { L"Наземное", L"Водное", L"Птица", L"Рептилия" };
 const vector<wstring> climates = { L"Тропический", L"Умеренный", L"Полярный", L"Пустынный", L"Водный" };
@@ -43,6 +48,8 @@ const vector<wstring> animalSpecies = {
     L"Крокодил", L"Слон", L"Носорог", L"Жираф", L"Зебра",
     L"Дельфин", L"Акула", L"Черепаха", L"Осьминог"
 };
+
+// Сопоставление видов животных с подходящими климатами
 
 const map<wstring, vector<wstring>> speciesClimates = {
     {L"Лев", {L"Тропический", L"Пустынный"}},
@@ -61,6 +68,8 @@ const map<wstring, vector<wstring>> speciesClimates = {
     {L"Осьминог", {L"Водный"}}
 };
 
+// Сопоставление видов животных с их типами
+
 const map<wstring, AnimalType> speciesTypes = {
     {L"Лев", AnimalType::LAND}, {L"Тигр", AnimalType::LAND},
     {L"Медведь", AnimalType::LAND}, {L"Волк", AnimalType::LAND},
@@ -70,6 +79,8 @@ const map<wstring, AnimalType> speciesTypes = {
     {L"Дельфин", AnimalType::AQUATIC}, {L"Акула", AnimalType::AQUATIC},
     {L"Черепаха", AnimalType::REPTILE}, {L"Осьминог", AnimalType::AQUATIC}
 };
+
+// Названия и зарплаты работников
 
 const map<WorkerType, wstring> workerTypeNames = {
     {WORKER_VET, L"Ветеринар"}, {WORKER_CLEANER, L"Уборщик"},
@@ -83,6 +94,8 @@ const map<WorkerType, int> workerBaseSalaries = {
     {WORKER_GUIDE, 30000}
 };
 
+// Максимальный возраст для каждого вида животных
+
 const map<wstring, int> speciesMaxAge = {
     {L"Лев", 15 + rand() % 10}, {L"Тигр", 14 + rand() % 8},
     {L"Медведь", 20 + rand() % 15}, {L"Волк", 8 + rand() % 5},
@@ -92,6 +105,8 @@ const map<wstring, int> speciesMaxAge = {
     {L"Дельфин", 30 + rand() % 15}, {L"Акула", 40 + rand() % 20},
     {L"Черепаха", 50 + rand() % 30}, {L"Осьминог", 5 + rand() % 3}
 };
+
+// Типы вольеров с их характеристиками
 
 const map<int, tuple<EnclosureType, int, int, wstring>> enclosureTypes = {
     {1, {ENCLOSURE_SMALL, 5, 5000, L"Малый"}},
@@ -104,6 +119,8 @@ const map<int, tuple<EnclosureType, int, int, wstring>> enclosureTypes = {
     {8, {ENCLOSURE_PETTING_ZOO, 10, 6000, L"Контактный зоопарк"}}
 };
 
+// Генерация имени животного в зависимости от пола
+
 wstring generateAnimalName(const wstring& species, wchar_t gender) {
     if (gender == 'F') {
         if (species == L"Лев") return L"Львица";
@@ -114,9 +131,13 @@ wstring generateAnimalName(const wstring& species, wchar_t gender) {
     return species;
 }
 
+// Проверка, является ли строка числом
+
 bool isNumber(const wstring& str) {
     return !str.empty() && all_of(str.begin(), str.end(), [](wchar_t ch) { return iswdigit(ch); });
 }
+
+// Безопасный ввод строки с проверкой на пустоту
 
 wstring safeInputString(const wstring& prompt) {
     wstring input;
@@ -128,6 +149,8 @@ wstring safeInputString(const wstring& prompt) {
     }
 }
 
+// Безопасный ввод числа
+
 int safeInputInt(const wstring& prompt) {
     wstring input;
     while (true) {
@@ -138,8 +161,12 @@ int safeInputInt(const wstring& prompt) {
     }
 }
 
+// Класс Animal: представляет животное в зоопарке
+
 class Animal {
 public:
+    // Основные атрибуты животного
+
     int id;
     wstring name;
     wstring species;
@@ -161,6 +188,8 @@ public:
     int daysSick;
     bool hasDisease;
 
+// Конструктор животного
+
     Animal(int _id, wstring n, wstring s, int a, int w, wstring c, bool pred, int p, wchar_t g, int maxA = -1, int p1 = -1, int p2 = -1)
         : id(_id), name(move(n)), species(move(s)), age(a), weight(w), climate(move(c)), isPredator(pred), price(p),
         trueHappiness(70 + rand() % 31), displayedHappiness(trueHappiness), lastUpdateTime(time(0)),
@@ -177,7 +206,11 @@ public:
         }
     }
 
+// Обновление отображаемого уровня счастья
+
     void updateDisplayedHappiness() { displayedHappiness = trueHappiness; }
+
+// Получение цвета для отображения уровня счастья
 
     wstring getHappinessColor() const {
         if (!isAlive) return L"\033[90m";
@@ -187,6 +220,8 @@ public:
         if (displayedHappiness >= 20) return L"\033[31m";
         return L"\033[91m";
     }
+
+// Обновление уровня счастья на основе условий содержания
 
     void updateHappiness(bool isFed, bool isAlone, bool isClean) {
         if (!isAlive) return;
@@ -209,6 +244,8 @@ public:
         }
     }
 
+// Попытка побега животного
+
     bool tryEscape() {
         if (!isAlive) return false;
         if (trueHappiness <= 15) {
@@ -222,6 +259,8 @@ public:
         return false;
     }
 
+// Проверка возраста животного
+
     bool checkAge() {
         if (age > maxAge) {
             int deathChance = min(100, age - maxAge);
@@ -234,16 +273,24 @@ public:
         return false;
     }
 
+// Переименование животного
+
     void rename(const wstring& newName) {
         name = newName;
         wcout << L"Животное ID:" << id << L" теперь зовут " << name << endl;
     }
 
+// Проверка возможности размножения
+
     bool canReproduce() const {
         return isAlive && age > 5 && age < maxAge - 2 && health == AnimalHealth::HEALTHY;
     }
 
+// Оператор сравнения животных по ID
+
     bool operator==(const Animal& other) const { return id == other.id; }
+
+// Оператор размножения животных
 
     vector<unique_ptr<Animal>> operator+(Animal& other) {
         vector<unique_ptr<Animal>> offspring;
@@ -304,6 +351,8 @@ public:
         return offspring;
     }
 
+// Проверка болезни животного
+
     void checkDisease() {
         if (!isAlive || health == AnimalHealth::DEAD) return;
 
@@ -330,6 +379,8 @@ public:
         }
     }
 
+// Геттеры
+
     int getDisplayedHappiness() const { return displayedHappiness; }
     int getTrueHappiness() const { return trueHappiness; }
     wchar_t getGender() const { return gender; }
@@ -341,6 +392,8 @@ public:
     AnimalType getType() const { return type; }
 };
 
+// Класс Enclosure: представляет вольер в зоопарке
+
 class Enclosure {
 public:
     int id;
@@ -351,9 +404,13 @@ public:
     bool isClean;
     vector<Animal*> containedAnimals;
 
+// Конструктор вольера
+    
     Enclosure(int _id, int c, EnclosureType t, wstring cl, int cost)
         : id(_id), capacity(c), type(t), climate(move(cl)), maintenanceCost(cost), isClean(true) {
     }
+
+// Получение названия типа вольера
 
     wstring getTypeName() const {
         static const map<EnclosureType, wstring> typeNames = {
@@ -365,6 +422,8 @@ public:
         return typeNames.at(type);
     }
 
+// Проверка подходит ли вольер для типа животного
+
     bool isSuitableForAnimalType(AnimalType animalType) const {
         switch (type) {
         case ENCLOSURE_AQUARIUM: return animalType == AnimalType::AQUATIC;
@@ -374,12 +433,16 @@ public:
         }
     }
 
+// Обновление состояния чистоты вольера
+
     void updateCleanliness() {
         if (!containedAnimals.empty() && rand() % 3 == 0) {
             isClean = false;
             wcout << L"Вольер ID:" << id << L" (" << getTypeName() << L") стал грязным." << endl;
         }
     }
+
+// Добавление животного в вольер
 
     bool addAnimal(Animal* animal) {
         if (containedAnimals.size() >= static_cast<size_t>(capacity)) {
@@ -399,6 +462,8 @@ public:
         return true;
     }
 
+// Удаление животного из вольера
+
     bool removeAnimal(int animalId) {
         for (auto it = containedAnimals.begin(); it != containedAnimals.end(); ++it) {
             if ((*it)->id == animalId) {
@@ -409,10 +474,14 @@ public:
         return false;
     }
 
+// Очистка вольера
+
     void clean() {
         isClean = true;
         wcout << L"Вольер ID:" << id << L" (" << getTypeName() << L") был почищен." << endl;
     }
+
+// Получение животных определенного пола
 
     vector<Animal*> getAnimalsByGender(wchar_t gender) {
         vector<Animal*> result;
@@ -423,6 +492,8 @@ public:
         }
         return result;
     }
+
+// Распространение болезни среди животных в вольере
 
     void spreadDisease() {
         if (containedAnimals.empty()) return;
@@ -445,6 +516,8 @@ public:
     }
 };
 
+// Класс Worker: представляет работника зоопарка
+
 class Worker {
 public:
     int id;
@@ -452,6 +525,8 @@ public:
     WorkerType type;
     int salary;
     int capacity;
+
+// Конструктор работника
 
     Worker(int _id, wstring n, WorkerType t)
         : id(_id), name(move(n)), type(t), salary(workerBaseSalaries.at(t)), capacity(0) {
@@ -464,9 +539,15 @@ public:
         if (type == WORKER_GUIDE) salary += 5000;
     }
 
+// Получение названия типа работника
+
     wstring getTypeName() const { return workerTypeNames.at(type); }
 
+// Выполнение обязанностей работника
+
     void performDuties(Zoo* zoo);
+
+    // Очистка вольеров
 
     void cleanEnclosures(vector<unique_ptr<Enclosure>>& enclosures) {
         int cleaned = 0;
@@ -481,6 +562,8 @@ public:
             wcout << name << L" почистил " << cleaned << L" вольеров." << endl;
         }
     }
+
+// Лечение животных
 
     void treatAnimals(vector<unique_ptr<Animal>>& animals) {
         int treated = 0;
@@ -497,6 +580,8 @@ public:
     }
 };
 
+// Класс Zoo: основной класс, управляющий зоопарком
+
 class Zoo {
 private:
     bool testMode;
@@ -507,6 +592,8 @@ private:
     unordered_map<int, Animal*> animalsMap;
     unordered_map<int, Enclosure*> enclosuresMap;
     unordered_map<int, Worker*> workersMap;
+
+// Обновление карт для быстрого поиска объектов
 
     void updateMaps() {
         animalsMap.clear();
@@ -539,6 +626,8 @@ public:
     int nextWorkerId;
     wstring directorName;
 
+// Конструктор зоопарка
+
     Zoo(wstring zooName, int victoryDaysCount)
         : name(move(zooName)), money(500000), food(100), popularity(10), visitors(20),
         days(0), victoryDays(victoryDaysCount), nextAnimalId(1), nextEnclosureId(1),
@@ -551,20 +640,28 @@ public:
         refreshMarket();
     }
 
+// Поиск животного по ID
+
     Animal* findAnimal(int id) {
         auto it = animalsMap.find(id);
         return it != animalsMap.end() ? it->second : nullptr;
     }
+
+// Поиск вольера по ID
 
     Enclosure* findEnclosure(int id) {
         auto it = enclosuresMap.find(id);
         return it != enclosuresMap.end() ? it->second : nullptr;
     }
 
+// Поиск работника по ID
+
     Worker* findWorker(int id) {
         auto it = workersMap.find(id);
         return it != workersMap.end() ? it->second : nullptr;
     }
+
+// Обновление рынка животных
 
     void refreshMarket() {
         marketAnimals.clear();
@@ -603,6 +700,8 @@ public:
         wcout << L"Рынок животных обновлен! Доступно " << marketAnimals.size() << L" животных." << endl;
     }
 
+// Отображение главного меню
+
     void showMainMenu() {
         wcout << L"\n=== " << name << L" ===" << endl;
         wcout << L"Директор: " << directorName << endl;
@@ -626,6 +725,8 @@ public:
         wcout << L"9. Выход" << endl;
     }
 
+// Отображение меню животных
+
     void showAnimalsMenu() {
         wcout << L"\n=== Животные ===" << endl;
         wcout << L"1. Купить животное с рынка" << endl;
@@ -637,6 +738,8 @@ public:
         wcout << L"0. Назад" << endl;
     }
 
+// Отображение меню вольеров
+
     void showEnclosuresMenu() {
         wcout << L"\n=== Вольеры ===" << endl;
         wcout << L"1. Купить вольер" << endl;
@@ -644,12 +747,16 @@ public:
         wcout << L"0. Назад" << endl;
     }
 
+// Отображение меню работников
+
     void showWorkersMenu() {
         wcout << L"\n=== Работники ===" << endl;
         wcout << L"1. Нанять работника" << endl;
         wcout << L"2. Просмотреть работников" << endl;
         wcout << L"0. Назад" << endl;
     }
+
+// Отображение животных на рынке
 
     void showMarketAnimals() {
         wcout << L"\n=== Животные на рынке ===" << endl;
@@ -667,6 +774,8 @@ public:
                 << L" | Цена: " << animal->price << L" руб." << endl;
         }
     }
+
+// Покупка животного с рынка
 
     void buyAnimal() {
         if (days > 10 && animalsBoughtToday >= 1) {

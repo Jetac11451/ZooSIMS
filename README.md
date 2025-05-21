@@ -29,6 +29,7 @@
 📚 Документация: 
 ```bash
 // Обновляет отображаемый уровень счастья
+
     void updateDisplayedHappiness() { displayedHappiness = trueHappiness; }
 
     
@@ -46,6 +47,7 @@
 
      //Обновляет уровень счастья на основе условий содержания
      // Учитывает кормление, чистоту вольера, одиночество и болезнь
+
     void updateHappiness(bool isFed, bool isAlone, bool isClean) {
         if (!isAlive) return;
         int oldHappiness = trueHappiness;
@@ -69,6 +71,7 @@
 
      //Проверяет, может ли животное сбежать из-за низкого счастья
      //Вероятность побега увеличивается при снижении счастья
+
     bool tryEscape() {
         if (!isAlive) return false;
         if (trueHappiness <= 15) {
@@ -84,6 +87,7 @@
 
      //Проверяет, может ли животное умереть от старости
      //Вероятность смерти увеличивается с возрастом
+
     bool checkAge() {
         if (age > maxAge) {
             int deathChance = min(100, age - maxAge);
@@ -98,35 +102,42 @@
 
      //Проверяет, может ли животное размножаться
      //Животное должно быть живым, не слишком молодым/старым и здоровым
+
     bool canReproduce() const {
         return isAlive && age > 5 && age < maxAge - 2 && health == AnimalHealth::HEALTHY;
     }
 
     // Оператор сравнения животных по ID
+
     bool operator==(const Animal& other) const { return id == other.id; }
 
      //Оператор размножения животных
      //Возвращает вектор потомков, если размножение возможно
+
     vector<unique_ptr<Animal>> operator+(Animal& other) {
         vector<unique_ptr<Animal>> offspring;
 
         // Проверка возможности размножения
+
         if (!this->canReproduce() || !other.canReproduce()) {
             wcout << L"Одно из животных не может размножаться (слишком молодое/старое, мертвое или больное)!" << endl;
             return offspring;
         }
 
         // Проверка разнополости
+
         if (this->gender == other.gender) {
             wcout << L"Однополые животные не могут размножаться!" << endl;
             return offspring;
         }
 
         // Определение отца и матери
+
         Animal* father = (this->gender == 'M') ? this : &other;
         Animal* mother = (this->gender == 'F') ? this : &other;
 
         // Определение количества потомков в зависимости от вида
+
         int offspringCount = 1;
         int chance = rand() % 100;
 
@@ -145,10 +156,12 @@
         }
 
         // Создание потомков
+
         for (int i = 0; i < offspringCount; i++) {
             wstring babyName = L"Детеныш " + species;
 
             // Особые имена для детенышей некоторых видов
+
             if (species == L"Носорог") babyName = L"Носорожок";
             else if (species == L"Слон") babyName = L"Слонёнок";
             else if (species == L"Жираф") babyName = L"Жирафёнок";
@@ -158,11 +171,13 @@
             else if (species == L"Акула") babyName = L"Акулёнок";
 
             // Расчет параметров потомка
+
             int babyWeight = (father->weight + mother->weight) / (10 + rand() % 5);
             int babyPrice = (father->price + mother->price) / (4 + rand() % 3);
             wchar_t babyGender = (rand() % 2) ? 'M' : 'F';
 
             // Создание нового животного-потомка
+
             offspring.push_back(make_unique<Animal>(
                 0, babyName, species, 0, babyWeight, mother->climate,
                 mother->isPredator, babyPrice, babyGender, -1, father->id, mother->id
@@ -176,6 +191,7 @@
 
      //Проверяет здоровье животного
      //Может вызвать болезнь, выздоровление или смерть
+
     void checkDisease() {
         if (!isAlive || health == AnimalHealth::DEAD) return;
 
@@ -191,12 +207,14 @@
         else if (health == AnimalHealth::SICK) {
             daysSick++;
             // После 5 дней болезни - 30% шанс умереть
+
             if (daysSick > 5 && rand() % 100 < 30) {
                 health = AnimalHealth::DEAD;
                 isAlive = false;
                 wcout << name << L" (ID:" << id << L") умер от болезни!" << endl;
             }
             // После 3 дней болезни - 20% шанс выздороветь
+
             else if (daysSick > 3 && rand() % 100 < 20) {
                 health = AnimalHealth::HEALTHY;
                 hasDisease = false;
@@ -209,12 +227,15 @@
 ```bash
 //Обновляет состояние чистоты вольера
 //С шансом 1/3 вольер может стать грязным
+
     void updateCleanliness() {
         if (!containedAnimals.empty() && rand() % 3 == 0) {
             isClean = false;
             wcout << L"Вольер ID:" << id << L" (" << getTypeName() << L") стал грязным." << endl;
+
  //Возвращает животных определенного пола
  //Используется для размножения
+
     vector<Animal*> getAnimalsByGender(wchar_t gender) {
         vector<Animal*> result;
         for (auto& animal : containedAnimals) {
@@ -226,6 +247,7 @@
     }
 //Распространяет болезнь среди животных в вольере
 //Если есть хотя бы одно больное животное, другие могут заболеть с шансом 20%
+
     void spreadDisease() {
         if (containedAnimals.empty()) return;
 
@@ -250,6 +272,7 @@
 ```bash
   //Чистит вольеры
   //Может почистить до capacity вольеров за день
+
     void cleanEnclosures(vector<unique_ptr<Enclosure>>& enclosures) {
         int cleaned = 0;
         for (auto& enclosure : enclosures) {
@@ -266,6 +289,7 @@
 
      //Лечит животных
      //Может вылечить до capacity животных за день
+
     void treatAnimals(vector<unique_ptr<Animal>>& animals) {
         int treated = 0;
         for (auto& animal : animals) {
@@ -283,6 +307,7 @@
 ```
 ``` bash
 // Обновляет карты для быстрого поиска
+
     void updateMaps() {
         animalsMap.clear();
         for (auto& animal : animals) {

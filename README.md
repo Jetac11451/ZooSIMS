@@ -87,20 +87,21 @@
     }
 ```
 ```bash
-     //Проверяет, может ли животное умереть от старости
-     //Вероятность смерти увеличивается с возрастом
+    // Проверяет, может ли животное умереть от старости
+    // Вероятность смерти увеличивается с возрастом
 
-    bool checkAge() {
-        if (age > maxAge) {
-            int deathChance = min(100, age - maxAge);
-            if (rand() % 100 < deathChance) {
-                wcout << name << L (ID: << id << L) умер от старости в возрасте  << age << L дней. << endl
-                isAlive = false
-                return true
-            }
+bool checkAge() {
+    if (age > maxAge) {
+        int deathChance = min(100, age - maxAge);
+        if (rand() % 100 < deathChance) {
+            wcout << name << L" (ID: " << id << L") умер от старости в возрасте " << age << L" дней." << endl;
+            isAlive = false;
+            return true;
         }
-        return false
     }
+    return false;
+}
+
 ```
 ```bash
 

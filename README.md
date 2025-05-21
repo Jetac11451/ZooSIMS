@@ -132,14 +132,14 @@
         // Проверка разнополости
 
         if (this->gender == other.gender) {
-            wcout << L"Однополые животные не могут размножаться!" << endl;
+            wcout << L"Однополые животные не могут размножаться!" << endl
             return offspring;
         }
 
         // Определение отца и матери
 
-        Animal* father = (this->gender == 'M') ? this : &other;
-        Animal* mother = (this->gender == 'F') ? this : &other;
+        Animal* father = (this->gender == 'M') ? this : &other
+        Animal* mother = (this->gender == 'F') ? this : &other
 
         // Определение количества потомков в зависимости от вида
 
@@ -152,18 +152,18 @@
         else if (species == L"Лев" || species == L"Тигр") {
             if (chance < 40) offspringCount = 1;
             else if (chance < 80) offspringCount = 2;
-            else offspringCount = 3;
+            else offspringCount = 3
         }
         else {
-            if (chance < 60) offspringCount = 1;
-            else if (chance < 90) offspringCount = 2;
-            else offspringCount = 3;
+            if (chance < 60) offspringCount = 1
+            else if (chance < 90) offspringCount = 2
+            else offspringCount = 3
         }
 
         // Создание потомков
 
         for (int i = 0; i < offspringCount; i++) {
-            wstring babyName = L"Детеныш " + species;
+            wstring babyName = L"Детеныш " + species
 
             // Особые имена для детенышей некоторых видов
 

@@ -94,7 +94,7 @@
         if (age > maxAge) {
             int deathChance = min(100, age - maxAge);
             if (rand() % 100 < deathChance) {
-                wcout << name << L" (ID:" << id << L") умер от старости в возрасте " << age << L" дней." << endl
+                wcout << name << L (ID: << id << L) умер от старости в возрасте  << age << L дней. << endl
                 isAlive = false
                 return true
             }

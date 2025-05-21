@@ -198,7 +198,7 @@ speciesClimates, speciesTypes, workerTypeNames, workerBaseSalaries, speciesMaxAg
 
 Разводить животных в одном вольере
 
-Пройти 100 дней успешного управления зоопарком\
+Пройти 100 дней успешного управления зоопарком
 
 ---
 
